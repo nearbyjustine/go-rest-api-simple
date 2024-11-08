@@ -7,14 +7,14 @@ type ClientProfile struct {
 	Token string
 }
 
-var  database = map[string]ClientProfile{
-	"user1": {
+var database = map[string]ClientProfile{
+	"001": {
 		Name:  "Ae",
 		Id:    "001",
 		Email: "ae@gmail.com",
 		Token: "AE01",
 	},
-	"user2": {
+	"002": {
 		Name:  "Beau",
 		Id:    "002",
 		Email: "beau@gmail.com",

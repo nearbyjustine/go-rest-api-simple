@@ -36,5 +36,25 @@ func GetClientProfile(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateClientProfile(w http.ResponseWriter, r *http.Request) {
-	panic("")
+	var clientId = r.URL.Query().Get("clientId")
+	clientProfile, ok := database[clientId]
+
+	if !ok || clientId == "" {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
+
+	// Decode the JSON payload directly into the struct
+	var payloadData ClientProfile
+	if err := json.NewDecoder(r.Body).Decode(&payloadData); err != nil {
+		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	clientProfile.Email = payloadData.Email
+	clientProfile.Name = payloadData.Name
+	database[clientProfile.Id] = clientProfile
+
+	w.WriteHeader(http.StatusOK)
 }
