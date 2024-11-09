@@ -12,13 +12,18 @@ const CLIENT_PROFILE_KEY key = "clientProfile"
 
 func TokenAuthMiddleWare(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		clientProfile := r.Context().Value("clientProfile").(ClientProfile)
-
+		var clientId = r.URL.Query().Get("clientId")
+		clientProfile, ok := database[clientId]
+		if !ok || clientId == "" {
+			http.Error(w, "Forbidden", http.StatusForbidden)
+			return
+		}
 		token := r.Header.Get("Authorization")
 		if !isValidToken(clientProfile, token) {
 			http.Error(w, "Forbidden", http.StatusForbidden)
 			return
 		}
+
 		ctx := c.WithValue(r.Context(), CLIENT_PROFILE_KEY, clientProfile)
 		r = r.WithContext(ctx)
 
