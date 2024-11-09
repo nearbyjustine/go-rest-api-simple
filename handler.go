@@ -17,13 +17,7 @@ func handleClientProfile(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetClientProfile(w http.ResponseWriter, r *http.Request) {
-	var clientId = r.URL.Query().Get("clientId")
-	clientProfile, ok := database[clientId]
-
-	if !ok || clientId == "" {
-		http.Error(w, "Forbidden", http.StatusForbidden)
-		return
-	}
+	clientProfile := r.Context().Value("clientProfile").(ClientProfile)
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -36,13 +30,7 @@ func GetClientProfile(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateClientProfile(w http.ResponseWriter, r *http.Request) {
-	var clientId = r.URL.Query().Get("clientId")
-	clientProfile, ok := database[clientId]
-
-	if !ok || clientId == "" {
-		http.Error(w, "Forbidden", http.StatusForbidden)
-		return
-	}
+	clientProfile := r.Context().Value("clientProfile").(ClientProfile)
 
 	// Decode the JSON payload directly into the struct
 	var payloadData ClientProfile
